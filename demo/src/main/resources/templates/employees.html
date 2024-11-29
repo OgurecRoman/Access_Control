@@ -7,6 +7,9 @@
 <body>
 <div class="container">
     <h1>Сотрудники</h1>
+    <nav>
+        <a th:href="@{/}">В главное меню</a>
+    </nav>
     <div class="employee-cards">
         <div th:each="employee : ${employees}" class="employee-card">
             <img th:src="@{/images/{photo}(photo=${employee.photo})}" alt="Фото сотрудника">

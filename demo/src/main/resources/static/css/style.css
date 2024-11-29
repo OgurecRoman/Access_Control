@@ -15,9 +15,14 @@ nav a {
     margin-right: 10px;
     text-decoration: none;
     color: #333;
+    border-radius: 5px;
+    border: 2px solid #D8E2EE;
+    background: #D8E2EE;
+    padding: 5px 20px;
 }
 
 .employee-cards {
+    margin-top: 25px;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
