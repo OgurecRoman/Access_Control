@@ -1,4 +1,4 @@
-package com.example.demo;
+package main.java.com.example.demo;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
