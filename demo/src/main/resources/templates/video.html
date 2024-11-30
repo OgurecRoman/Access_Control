@@ -3,23 +3,45 @@
 <head>
     <title>Видеопоток</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .alert-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .alert-button.visible {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <h1>Видеопоток</h1>
-    <nav>
-        <a th:href="@{/}">В главное меню</a>
-    </nav>
-    <iframe
-            id="video-stream"
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/uuRWYlhjVms"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-    </iframe>
+    <div class="videos">
+        <video width="320" height="240" controls autoplay loop>
+            <source src="/videos/кирби падает в яму мем.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+        <video width="320" height="240" controls autoplay loop>
+            <source src="/videos/кирби падает в яму мем.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+        <video width="320" height="240" controls autoplay loop>
+            <source src="/videos/кирби падает в яму мем.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+    </div>
+    <button id="alertButton" class="alert-button visible">Вызвать охрану</button>
+
 </div>
+<script src="/js/app.js"></script>
+<script>
+    console.log("Скрипт работает!");
+</script>
 </body>
 </html>
