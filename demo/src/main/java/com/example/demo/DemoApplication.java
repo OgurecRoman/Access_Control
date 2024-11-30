@@ -14,6 +14,6 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 
 		// Запуск FaceRecognition в отдельном потоке
-		new Thread(() -> FaceRecognition.main(null)).start();
+		//new Thread(() -> FaceRecognition.main(null)).start();
 	}
 }

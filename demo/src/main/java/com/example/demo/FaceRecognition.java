@@ -1,16 +1,20 @@
 package com.example.demo;
 
 import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@RestController
 public class FaceRecognition {
+
     static {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME); // Загружаем OpenCV
@@ -23,13 +27,13 @@ public class FaceRecognition {
         }
     }
 
-    public static void main(String[] args) {
+    private boolean isFaceDetected() {
         String faceCascadePath = "src/main/resources/haarcascade_frontalface_default.xml";
         CascadeClassifier faceCascade = new CascadeClassifier(faceCascadePath);
 
         if (faceCascade.empty()) {
             System.err.println("Ошибка загрузки классификатора.");
-            return;
+            return false;
         }
 
         String streamUrl = "rtmp://localhost/live/demo";
@@ -37,43 +41,38 @@ public class FaceRecognition {
 
         if (!capture.isOpened()) {
             System.err.println("Ошибка открытия видеопотока!");
-            return;
-        }
-
-        String outputFolder = "captured_faces";
-        File folder = new File(outputFolder);
-        if (!folder.exists() && !folder.mkdirs()) {
-            System.err.println("Не удалось создать папку для лиц.");
-            capture.release();
-            return;
+            return false;
         }
 
         Mat frame = new Mat();
-        while (true) {
-            if (!capture.read(frame) || frame.empty()) {
-                System.err.println("Не удалось считать кадр!");
-                break;
-            }
+        boolean faceFound = false;
 
+        // Only check for faces once for the API response
+        if (capture.read(frame) && !frame.empty()) {
             Mat gray = new Mat();
             Imgproc.cvtColor(frame, gray, Imgproc.COLOR_BGR2GRAY);
 
             MatOfRect faces = new MatOfRect();
             faceCascade.detectMultiScale(gray, faces);
 
-            saveFaces(frame, faces, outputFolder);
-
-            try {
-                Thread.sleep(5000); // Обработка каждые 5 секунд
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            if (faces.toArray().length > 0) {
+                faceFound = true;
+                saveFaces(frame, faces);
             }
         }
 
         capture.release();
+        return faceFound;
     }
 
-    private static void saveFaces(Mat frame, MatOfRect faces, String outputFolder) {
+    private static void saveFaces(Mat frame, MatOfRect faces) {
+        String outputFolder = "captured_faces";
+        File folder = new File(outputFolder);
+        if (!folder.exists() && !folder.mkdirs()) {
+            System.err.println("Не удалось создать папку для лиц.");
+            return;
+        }
+
         Rect[] faceArray = faces.toArray();
         for (int i = 0; i < faceArray.length; i++) {
             Mat face = new Mat(frame, faceArray[i]);
@@ -86,5 +85,10 @@ public class FaceRecognition {
                 System.err.println("Ошибка сохранения: " + filename);
             }
         }
+    }
+
+    @GetMapping("/api/check_face_status")
+    public boolean checkFaceStatus() {
+        return isFaceDetected();
     }
 }
