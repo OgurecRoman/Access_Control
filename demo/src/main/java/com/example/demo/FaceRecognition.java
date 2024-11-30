@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import org.opencv.core.*;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
@@ -12,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FaceRecognition {
-
     static {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME); // Загружаем OpenCV
