@@ -6,19 +6,20 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
+import java.io.File;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FaceRecognition {
 
     static {
         try {
-            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-            System.out.println("Библиотека OpenCV успешно загружена.");
+            System.loadLibrary(Core.NATIVE_LIBRARY_NAME); // Загружаем OpenCV
+            System.load("S:/opencv/opencv/build/bin/opencv_videoio_ffmpeg470_64.dll");
+            System.out.println("OpenCV загружен.");
         } catch (UnsatisfiedLinkError e) {
-            System.err.println("Ошибка: не удалось загрузить библиотеку OpenCV!");
+            System.err.println("Не удалось загрузить OpenCV!");
             e.printStackTrace();
             System.exit(1);
         }
@@ -29,22 +30,30 @@ public class FaceRecognition {
         CascadeClassifier faceCascade = new CascadeClassifier(faceCascadePath);
 
         if (faceCascade.empty()) {
-            System.err.println("Ошибка: не удалось загрузить классификатор лиц из " + faceCascadePath);
+            System.err.println("Ошибка загрузки классификатора.");
             return;
         }
-        System.out.println("Классификатор лиц успешно загружен.");
 
-        VideoCapture capture = new VideoCapture(0); // Камера
+        String streamUrl = "rtmp://localhost/live/demo";
+        VideoCapture capture = new VideoCapture(streamUrl); // Загружаем поток
+
         if (!capture.isOpened()) {
-            System.err.println("Ошибка: не удалось открыть камеру!");
+            System.err.println("Ошибка открытия видеопотока!");
+            return;
+        }
+
+        String outputFolder = "captured_faces";
+        File folder = new File(outputFolder);
+        if (!folder.exists() && !folder.mkdirs()) {
+            System.err.println("Не удалось создать папку для лиц.");
+            capture.release();
             return;
         }
 
         Mat frame = new Mat();
-
         while (true) {
             if (!capture.read(frame) || frame.empty()) {
-                System.err.println("Ошибка: не удалось захватить кадр!");
+                System.err.println("Не удалось считать кадр!");
                 break;
             }
 
@@ -54,11 +63,10 @@ public class FaceRecognition {
             MatOfRect faces = new MatOfRect();
             faceCascade.detectMultiScale(gray, faces);
 
-            boolean faceDetected = faces.toArray().length > 0;
-            sendFaceDetectionResult(faceDetected);
+            saveFaces(frame, faces, outputFolder);
 
             try {
-                Thread.sleep(10000); // Проверка каждые 10 секунд
+                Thread.sleep(5000); // Обработка каждые 5 секунд
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -67,30 +75,18 @@ public class FaceRecognition {
         capture.release();
     }
 
-    private static void sendFaceDetectionResult(boolean faceDetected) {
-        try {
-            URL url = new URL("http://localhost:8080/api/check_face");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
+    private static void saveFaces(Mat frame, MatOfRect faces, String outputFolder) {
+        Rect[] faceArray = faces.toArray();
+        for (int i = 0; i < faceArray.length; i++) {
+            Mat face = new Mat(frame, faceArray[i]);
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String filename = String.format("%s/face_%s_%d.png", outputFolder, timestamp, i + 1);
 
-            String jsonInput = String.format("{\"faceDetected\":%b}", faceDetected);
-
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(jsonInput.getBytes(StandardCharsets.UTF_8));
-                os.flush();
-            }
-
-            if (conn.getResponseCode() == 200) {
-                System.out.println("Результат отправлен успешно: " + jsonInput);
+            if (Imgcodecs.imwrite(filename, face)) {
+                System.out.println("Лицо сохранено: " + filename);
             } else {
-                System.err.println("Ошибка отправки данных: " + conn.getResponseCode());
+                System.err.println("Ошибка сохранения: " + filename);
             }
-
-            conn.disconnect();
-        } catch (Exception e) {
-            System.err.println("Ошибка при отправке запроса: " + e.getMessage());
         }
     }
 }
