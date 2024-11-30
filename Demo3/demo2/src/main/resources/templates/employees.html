@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Сотрудники</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Сотрудники</h1>
+    <div class="employee-cards">
+        <div th:each="employee : ${employees}" class="employee-card">
+            <img th:src="${employee.photoUrl}" alt="Фото сотрудника">
+            <h2 th:text="${employee.firstName} + ' ' + ${employee.lastName}"></h2>
+            <p th:text="${employee.status} ? 'На работе' : 'Отсутствует'"></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
