@@ -1,11 +1,9 @@
 package test.java.com.example.demo;
 
-import main.java.com.example.demo.DemoApplication;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = DemoApplication.class)
+@SpringBootTest(classes = com.example.demo.DemoApplication.class)
 class DemoApplicationTests {
 
 	@Test

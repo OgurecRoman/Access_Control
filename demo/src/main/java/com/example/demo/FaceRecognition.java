@@ -12,7 +12,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class FaceRecognition {
-
     static {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
