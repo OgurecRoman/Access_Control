@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package main.java.com.example.demo.service;
 
-import com.example.demo.model.Camera;
-import com.example.demo.repository.CameraRepository;
+import main.java.com.example.demo.model.Camera;
+import main.java.com.example.demo.repository.CameraRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

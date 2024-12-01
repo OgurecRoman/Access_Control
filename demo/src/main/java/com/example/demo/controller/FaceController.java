@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package main.java.com.example.demo.controller;
 
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;

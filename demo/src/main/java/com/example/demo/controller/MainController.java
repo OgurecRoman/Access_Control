@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package main.java.com.example.demo.controller;
 
-import com.example.demo.model.Employee;
-import com.example.demo.service.EmployeeService;
+import main.java.com.example.demo.model.Employee;
+import main.java.com.example.demo.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

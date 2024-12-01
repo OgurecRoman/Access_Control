@@ -1,6 +1,6 @@
-package com.example.demo.service;
-import com.example.demo.model.Employee;
-import com.example.demo.repository.EmployeeRepository;
+package main.java.com.example.demo.service;
+import main.java.com.example.demo.model.Employee;
+import main.java.com.example.demo.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

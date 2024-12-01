@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package main.java.com.example.demo.repository;
 
-import com.example.demo.model.Camera;
+import main.java.com.example.demo.model.Camera;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package main.java.com.example.demo.controller;
 
-import com.example.demo.model.Camera;
-import com.example.demo.service.CameraService;
+import main.java.com.example.demo.model.Camera;
+import main.java.com.example.demo.service.CameraService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
