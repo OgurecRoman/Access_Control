@@ -12,7 +12,7 @@ import java.io.File;
 
 public class Test {
     public static void main(String[] args) {
-        String url = "http://localhost:3030/model/add_face";
+        String url = "http://localhost:3030/structure/add_employee";
         File file = new File("/Users/licette./test_pic/pic.png");
 
         if (!file.exists()) {
