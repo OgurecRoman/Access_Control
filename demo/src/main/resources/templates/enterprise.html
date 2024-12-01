@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="${enterprise}"></title>
+  <title th:text="${enterprise.name}"></title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
@@ -36,11 +36,11 @@
   </style>
 </head>
 <body>
-<h1 th:text="${enterprise}"></h1>
+<h1 th:text="${enterprise.name}"></h1>
 <div id="camera-list">
   <!-- Для предприятия TEST -->
-  <div th:if="${enterprise == 'TEST'}">
-    <video id="video" controls width="640" height="360"></video>
+  <div th:if="${enterprise.name == 'TEST'}">
+    <video id="video" controls autoplay loop width="640" height="360"></video>
     <button id="alertButton" class="alert-button">Вызвать охрану</button>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -96,12 +96,18 @@
   </div>
 
   <!-- Для других предприятий -->
-  <div th:if="${enterprise != 'TEST'}">
+  <div th:if="${enterprise.name != 'TEST'}">
     <div class="camera-container">
       <p>Идет трансляция</p>
     </div>
   </div>
 </div>
+
+<form method="post" th:action="@{/cameras/add}">
+  <input type="text" name="ip" placeholder="IP камеры" required>
+  <input type="hidden" name="idOfEnterprise" th:value="${enterprise.id}">
+  <button type="submit">Добавить камеру</button>
+</form>
 
 <button onclick="addCamera()">Добавить камеру</button>
 <script>

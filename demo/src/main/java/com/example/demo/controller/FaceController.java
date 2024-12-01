@@ -6,17 +6,13 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 @RestController
 @RequestMapping("/api")
 public class FaceController {
-
     private boolean faceDetected = false; // To store face detection status
-
     static {
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -28,7 +24,6 @@ public class FaceController {
             System.exit(1);
         }
     }
-
     @GetMapping("/check_face_status")
     public boolean getFaceDetectionStatus(@RequestParam(required = false) String enterprise) {
         if ("TEST".equalsIgnoreCase(enterprise)) {
@@ -38,7 +33,6 @@ public class FaceController {
         System.out.println("Отправляем статус лица клиенту: " + faceDetected);
         return faceDetected;
     }
-
     private boolean isFaceDetected() {
         String faceCascadePath = "src/main/resources/haarcascade_frontalface_default.xml";
         File cascadeFile = new File(faceCascadePath);
@@ -46,20 +40,17 @@ public class FaceController {
             System.err.println("Файл классификатора не найден: " + faceCascadePath);
             return false;
         }
-
         CascadeClassifier faceCascade = new CascadeClassifier(faceCascadePath);
         if (faceCascade.empty()) {
             System.err.println("Ошибка загрузки классификатора.");
             return false;
         }
-
         String streamUrl = "rtmp://localhost/live/demo";
         VideoCapture capture = new VideoCapture(streamUrl);
         if (!capture.isOpened()) {
             System.err.println("Ошибка открытия видеопотока!");
             return false;
         }
-
         Mat frame = new Mat();
         boolean faceFound = false;
         if (capture.read(frame) && !frame.empty()) {
@@ -78,11 +69,9 @@ public class FaceController {
         } else {
             System.err.println("Не удалось считать кадр.");
         }
-
         capture.release();
         return faceFound;
     }
-
     private void saveFaces(Mat frame, MatOfRect faces) {
         String outputFolder = "captured_faces";
         File folder = new File(outputFolder);
@@ -90,7 +79,6 @@ public class FaceController {
             System.err.println("Не удалось создать папку для лиц.");
             return;
         }
-
         Rect[] faceArray = faces.toArray();
         for (int i = 0; i < faceArray.length; i++) {
             Mat face = new Mat(frame, faceArray[i]);

@@ -9,7 +9,7 @@
 <ul>
   <!-- Список всех предприятий -->
   <li th:each="enterprise : ${enterprises}">
-    <a th:href="@{/enterprises/{name}(name=${enterprise})}" th:text="${enterprise}"></a>
+    <a th:href="@{/enterprises/{name}(name=${enterprise.name})}" th:text="${enterprise.name}"></a>
   </li>
 </ul>
 <form method="post" th:action="@{/enterprises/add}">

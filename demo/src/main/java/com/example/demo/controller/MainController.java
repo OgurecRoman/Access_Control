@@ -1,46 +1,40 @@
 package com.example.demo.controller;
+
+import com.example.demo.model.Employee;
+import com.example.demo.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.util.ArrayList;
+
 import java.util.List;
+
 @Controller
 public class MainController {
-    @GetMapping("/")
-    public String index() {
-        return "index";
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+    private final EmployeeService employeeService;
+
+    public MainController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
+
     @GetMapping("/employees")
     public String employees(Model model) {
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("Иван Иванов", "на объекте", "ivan.jpg"));
-        employees.add(new Employee("Петр Петров", "не на объекте", "petr.jpg"));
-        employees.add(new Employee("Сергей Сергеев", "на объекте", "sergey.jpg"));
-        model.addAttribute("employees", employees);
+        try {
+            List<Employee> employees = employeeService.getAllEmployees();
+            logger.info("Fetched {} employees from the database.", employees.size());
+            model.addAttribute("employees", employees);
+        } catch (Exception e) {
+            logger.error("Error fetching employees: {}", e.getMessage(), e);
+            model.addAttribute("error", "Unable to load employees.");
+        }
         return "employees";
     }
-    @GetMapping("/video")
-    public String video() {
-        return "video";
-    }
-    public static class Employee {
-        private String name;
-        private String status;
-        private String photo;
-        public Employee(String name, String status, String photo) {
-            this.name = name;
-            this.status = status;
-            this.photo = photo;
-        }
-        //Getters and setters
-        public String getName() {
-            return name;
-        }
-        public String getStatus() {
-            return status;
-        }
-        public String getPhoto() {
-            return photo;
-        }
+
+    @GetMapping("/")
+    public String index() {
+        logger.info("Accessed index page.");
+        return "index";
     }
 }
