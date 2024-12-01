@@ -1,0 +1,16 @@
+CREATE TABLE cameras(
+	Id SERIAL PRIMARY KEY,
+	API VARCHAR(255),
+	id_room INTEGER
+);
+CREATE TABLE placec(
+	Id SERIAL PRIMARY KEY,
+	NAME VARCHAR(255)
+);
+CREATE TABLE works(
+	Id int,
+	Name VARCHAR(255),
+	Age INTEGER,
+	date DATE,
+	place BOOL
+);
