@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Главная страница</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+  <h1>Мой сайт</h1>
+  <nav>
+    <a th:href="@{/employees}">Сотрудники</a>
+    <a th:href="@{/video}">Видеопоток</a>
+    <a th:href="@{/department}">Помещения</a>
+  </nav>
+</div>
+</body>
+</html>
