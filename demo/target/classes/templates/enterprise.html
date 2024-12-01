@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${enterprise.name}"></title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    .camera-container {
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 640px;
+      height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+      color: white;
+      font-size: 18px;
+    }
+    .alert-button {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .alert-button.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<h1 th:text="${enterprise.name}"></h1>
+<div id="camera-list">
+  <!-- Для предприятия TEST -->
+  <div th:if="${enterprise.name == 'TEST'}">
+    <video id="video" controls autoplay loop width="640" height="360"></video>
+    <button id="alertButton" class="alert-button">Вызвать охрану</button>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const video = document.getElementById('video');
+        const videoSrc = 'http://localhost:8081/hls/demo.m3u8';
+        const alertButton = document.getElementById('alertButton');
+
+        async function checkFaceStatus() {
+          console.log("Запрос на получение статуса лица для TEST...");
+          try {
+            const response = await fetch('/api/check_face_status?enterprise=TEST');
+            if (!response.ok) {
+              throw new Error(`Ошибка сервера: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Статус лица от сервера для TEST:", data);
+
+            if (!data) {
+              alertButton.classList.add('visible');
+              console.log("Кнопка вызова охраны отображена.");
+            } else {
+              alertButton.classList.remove('visible');
+              console.log("Кнопка вызова охраны скрыта.");
+            }
+          } catch (error) {
+            console.error("Ошибка при получении статуса лица для TEST:", error);
+          }
+        }
+
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(videoSrc);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            console.log("Manifest loaded. Waiting for user interaction to play.");
+          });
+          hls.on(Hls.Events.ERROR, (event, data) => {
+            console.error("HLS.js Error:", data);
+          });
+        } else {
+          video.src = videoSrc;
+        }
+
+        video.addEventListener('play', () => {
+          alertButton.classList.add('visible');
+        });
+
+        // Проверяем статус каждые 10 секунд
+        setInterval(checkFaceStatus, 10000);
+        checkFaceStatus(); // Первичная проверка
+      });
+    </script>
+  </div>
+
+  <!-- Для других предприятий -->
+  <div th:if="${enterprise.name != 'TEST'}">
+    <div class="camera-container">
+      <p>Идет трансляция</p>
+    </div>
+  </div>
+</div>
+
+<form method="post" th:action="@{/cameras/add}">
+  <input type="text" name="ip" placeholder="IP камеры" required>
+  <input type="hidden" name="idOfEnterprise" th:value="${enterprise.id}">
+  <button type="submit">Добавить камеру</button>
+</form>
+
+<button onclick="addCamera()">Добавить камеру</button>
+<script>
+  function addCamera() {
+    const cameraList = document.getElementById('camera-list');
+    const cameraItem = document.createElement('div');
+    cameraItem.classList.add('camera-container');
+    cameraItem.textContent = 'Идет трансляция';
+    cameraList.appendChild(cameraItem);
+  }
+</script>
+</body>
+</html>

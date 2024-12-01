@@ -1,21 +1,17 @@
-package main.java.com.example.demo.service;
-
-import main.java.com.example.demo.model.Camera;
-import main.java.com.example.demo.repository.CameraRepository;
+package com.example.demo.service;
+import com.example.demo.model.Camera;
+import com.example.demo.repository.CameraRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
 @Service
 public class CameraService {
     private static final Logger logger = LoggerFactory.getLogger(CameraService.class);
     private final CameraRepository cameraRepository;
-
     public CameraService(CameraRepository cameraRepository) {
         this.cameraRepository = cameraRepository;
     }
-
     public List<Camera> getAllCameras() {
         try {
             List<Camera> cameras = cameraRepository.findAll();
@@ -27,7 +23,6 @@ public class CameraService {
             throw e;
         }
     }
-
     public Camera addCamera(Camera camera) {
         try {
             Camera savedCamera = cameraRepository.save(camera);

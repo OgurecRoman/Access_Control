@@ -1,57 +1,45 @@
+// src/main/java/com/example/demo/service/EmployeeService.java
 package com.example.demo.service;
+import com.example.demo.model.Employee;
+import com.example.demo.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-// Интерфейс для работы с загружаемыми файлами.
-import main.java.com.example.demo.employee_structure.EmployeeRepository;
-import main.java.com.example.demo.employee_structure.Employee;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-
 @Service
-// Аннотация, указывающая, что этот класс является сервисом в Spring.
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
-
-    public void addEmployee(String uuid, MultipartFile file) throws IOException {
-        String filePath = "uploads/" + file.getOriginalFilename();
-        file.transferTo(new File(filePath));
-        employeeRepository.save(new Employee(uuid, filePath));
+    public boolean addEmployee(Employee employee, MultipartFile file, boolean fromCamera) {
+        try {
+            String photo = fromCamera ? processPhotoFromCamera(file) : "";
+            employee.setPhoto(photo);
+            employeeRepository.save(employee);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
-
-    public boolean removeEmployee(String uuid) {
-        List<Employee> employees = employeeRepository.findByUuid(uuid);
-        if (!employees.isEmpty()) {
-            employeeRepository.deleteByUuid(uuid);
+    public boolean removeEmployee(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        if (employee.isPresent()) {
+            employeeRepository.delete(employee.get());
             return true;
         }
         return false;
     }
-
-    // Мок-проверка
-    public String checkEmployee(MultipartFile file) {
-        List<Employee> employees = employeeRepository.findAll();
-        if (!employees.isEmpty()) return "null";
-        Random random = new Random();
-        int min = 10;
-        int max = 20;
-        int randomNumber = random.nextInt((max - min) + 1) + min;
-        if (randomNumber > 10) return null;
-        min = 0;
-        max = employees.size() - 1;
-        randomNumber = random.nextInt((max - min) + 1) + min;
-        return employees.get(randomNumber).getUuid();
+    public boolean poll() {
+        return new Random().nextBoolean();
     }
-
-    public List<String> getEmployees() {
-        return employeeRepository.findAll().stream()
-                .map(Employee::getUuid)
-                .collect(Collectors.toList());
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+    private String processPhotoFromCamera(MultipartFile file) {
+        return file != null ? "processed_photo_data" : "";
     }
 }

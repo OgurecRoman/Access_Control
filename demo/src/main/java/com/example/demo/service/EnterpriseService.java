@@ -1,21 +1,17 @@
-package main.java.com.example.demo.service;
-
-import main.java.com.example.demo.model.Enterprise;
-import main.java.com.example.demo.repository.EnterpriseRepository;
+package com.example.demo.service;
+import com.example.demo.model.Enterprise;
+import com.example.demo.repository.EnterpriseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
 @Service
 public class EnterpriseService {
     private static final Logger logger = LoggerFactory.getLogger(EnterpriseService.class);
     private final EnterpriseRepository enterpriseRepository;
-
     public EnterpriseService(EnterpriseRepository enterpriseRepository) {
         this.enterpriseRepository = enterpriseRepository;
     }
-
     public List<Enterprise> getAllEnterprises() {
         try {
             List<Enterprise> enterprises = enterpriseRepository.findAll();
@@ -27,7 +23,6 @@ public class EnterpriseService {
             throw e;
         }
     }
-
     public Enterprise addEnterprise(Enterprise enterprise) {
         try {
             Enterprise savedEnterprise = enterpriseRepository.save(enterprise);

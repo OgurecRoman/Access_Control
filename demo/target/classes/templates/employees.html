@@ -13,9 +13,10 @@
     </nav>
     <div class="employee-cards">
         <div th:each="employee : ${employees}" class="employee-card">
-            <img th:src="@{/images/{photo}(photo=${employee.photo})}" alt="Фото сотрудника">
             <h2 th:text="${employee.name}"></h2>
-            <p th:text="${employee.status}"></p>
+            <p><strong>ID предприятия:</strong> <span th:text="${employee.idOfEnterprise}"></span></p>
+            <p><strong>Последнее время:</strong> <span th:text="${employee.dateTime}"></span></p>
+            <p><strong>Возраст:</strong> <span th:text="${employee.age}"></span> лет</p>
         </div>
     </div>
 </div>

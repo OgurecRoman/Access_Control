@@ -1,29 +1,23 @@
-package main.java.com.example.demo.controller;
-
-import main.java.com.example.demo.model.Enterprise;
-import main.java.com.example.demo.service.EnterpriseService;
+package com.example.demo.controller;
+import com.example.demo.model.Enterprise;
+import com.example.demo.service.EnterpriseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 @Controller
 @RequestMapping("/enterprises")
 public class EnterpriseController {
     private final EnterpriseService enterpriseService;
-
     public EnterpriseController(EnterpriseService enterpriseService) {
         this.enterpriseService = enterpriseService;
     }
-
     @GetMapping
     public String listEnterprises(Model model) {
         List<Enterprise> enterprises = enterpriseService.getAllEnterprises();
         model.addAttribute("enterprises", enterprises);
         return "enterprises";
     }
-
     @PostMapping("/add")
     public String addEnterprise(@RequestParam String name) {
         Enterprise enterprise = new Enterprise();
@@ -31,7 +25,6 @@ public class EnterpriseController {
         enterpriseService.addEnterprise(enterprise);
         return "redirect:/enterprises";
     }
-
     @GetMapping("/{name}")
     public String enterprisePage(@PathVariable String name, Model model) {
         Enterprise enterprise = enterpriseService.getAllEnterprises().stream()

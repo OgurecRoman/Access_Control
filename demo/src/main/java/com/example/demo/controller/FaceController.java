@@ -1,4 +1,4 @@
-package main.java.com.example.demo.controller;
+package com.example.demo.controller;
 
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -72,23 +72,9 @@ public class FaceController {
         capture.release();
         return faceFound;
     }
-    private void saveFaces(Mat frame, MatOfRect faces) {
-        String outputFolder = "captured_faces";
-        File folder = new File(outputFolder);
-        if (!folder.exists() && !folder.mkdirs()) {
-            System.err.println("Не удалось создать папку для лиц.");
-            return;
-        }
+    private Mat saveFaces(Mat frame, MatOfRect faces) {
         Rect[] faceArray = faces.toArray();
-        for (int i = 0; i < faceArray.length; i++) {
-            Mat face = new Mat(frame, faceArray[i]);
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String filename = String.format("%s/face_%s_%d.png", outputFolder, timestamp, i + 1);
-            if (Imgcodecs.imwrite(filename, face)) {
-                System.out.println("Лицо сохранено: " + filename);
-            } else {
-                System.err.println("Ошибка сохранения: " + filename);
-            }
-        }
+        Mat face = new Mat(frame, faceArray[0]);
+        return face;
     }
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Камеры</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Камеры</h1>
+<ul>
+    <!-- Список всех камер -->
+    <li th:each="camera : ${cameras}">
+        <p>IP: <span th:text="${camera.ip}"></span></p>
+        <p>ID предприятия: <span th:text="${camera.idOfEnterprise}"></span></p>
+    </li>
+</ul>
+<form method="post" th:action="@{/cameras/add}">
+    <input type="text" name="ip" placeholder="IP камеры" required>
+    <input type="number" name="idOfEnterprise" placeholder="ID предприятия" required>
+    <button type="submit">Добавить камеру</button>
+</form>
+</body>
+</html>
