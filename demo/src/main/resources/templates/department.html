@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Помещения</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Помещения</h1>
+    <nav>
+        <a th:href="@{/}">В главное меню</a>
+    </nav>
+    <nav>
+        <a th:href="@{/addDepartment}">Добавить новое помещение</a>
+    </nav>
+    <div class="department-cards">
+        <div th:each="department : ${department}" class="department-card">
+            <h2 th:text="${department.name}"></h2>
+            <p th:text="${department.status}"></p>
+            <nav>
+                <a th:href="@{/video}">Перейти к трансляции</a>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>
