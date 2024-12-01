@@ -71,6 +71,18 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.0</version> <!-- Убедитесь, что используете последнюю версию -->
+		</dependency>
+
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>5.0.1</version> <!-- Убедитесь, что используете последнюю версию -->
+		</dependency>
 	</dependencies>
 
 	<build>
