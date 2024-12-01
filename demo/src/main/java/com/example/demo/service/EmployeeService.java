@@ -1,27 +1,57 @@
-package main.java.com.example.demo.service;
-import main.java.com.example.demo.model.Employee;
-import main.java.com.example.demo.repository.EmployeeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.example.demo.service;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+// Интерфейс для работы с загружаемыми файлами.
+import main.java.com.example.demo.employee_structure.EmployeeRepository;
+import main.java.com.example.demo.employee_structure.Employee;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-@Service
-public class EmployeeService {
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
-    private final EmployeeRepository employeeRepository;
+import java.util.Random;
+import java.util.stream.Collectors;
 
+
+@Service
+// Аннотация, указывающая, что этот класс является сервисом в Spring.
+public class EmployeeService {
+    private final EmployeeRepository employeeRepository;
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
-    public List<Employee> getAllEmployees() {
-        try {
-            List<Employee> employees = employeeRepository.findAll();
-            logger.info("Successfully fetched employees from the database.");
-            employees.forEach(employee -> logger.info("Employee details: {}", employee)); // Вывод всех полей
-            return employees;
-        } catch (Exception e) {
-            logger.error("Error retrieving employees from the database: {}", e.getMessage(), e);
-            throw e; // Rethrow to allow handling at the controller level
+
+    public void addEmployee(String uuid, MultipartFile file) throws IOException {
+        String filePath = "uploads/" + file.getOriginalFilename();
+        file.transferTo(new File(filePath));
+        employeeRepository.save(new Employee(uuid, filePath));
+    }
+
+    public boolean removeEmployee(String uuid) {
+        List<Employee> employees = employeeRepository.findByUuid(uuid);
+        if (!employees.isEmpty()) {
+            employeeRepository.deleteByUuid(uuid);
+            return true;
         }
+        return false;
+    }
+
+    // Мок-проверка
+    public String checkEmployee(MultipartFile file) {
+        List<Employee> employees = employeeRepository.findAll();
+        if (!employees.isEmpty()) return "null";
+        Random random = new Random();
+        int min = 10;
+        int max = 20;
+        int randomNumber = random.nextInt((max - min) + 1) + min;
+        if (randomNumber > 10) return null;
+        min = 0;
+        max = employees.size() - 1;
+        randomNumber = random.nextInt((max - min) + 1) + min;
+        return employees.get(randomNumber).getUuid();
+    }
+
+    public List<String> getEmployees() {
+        return employeeRepository.findAll().stream()
+                .map(Employee::getUuid)
+                .collect(Collectors.toList());
     }
 }
