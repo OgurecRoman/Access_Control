@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const alertButton = document.getElementById("alertButton");
         function checkFaceStatus() {
             console.log("Запрос на получение статуса лица...");
-            fetch('/api/check_face_status', {
+            fetch('/poll', {
                 method: 'GET'
             })
             .then(response => {

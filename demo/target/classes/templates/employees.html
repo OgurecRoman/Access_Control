@@ -17,6 +17,7 @@
             <p><strong>ID предприятия:</strong> <span th:text="${employee.idOfEnterprise}"></span></p>
             <p><strong>Последнее время:</strong> <span th:text="${employee.dateTime}"></span></p>
             <p><strong>Возраст:</strong> <span th:text="${employee.age}"></span> лет</p>
+            <a th:href="@{/remove/{id}(id=${employee.id})}" class="btn btn-danger">Удалить</a>
         </div>
     </div>
 </div>

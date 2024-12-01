@@ -40,58 +40,59 @@
 <div id="camera-list">
   <!-- Для предприятия TEST -->
   <div th:if="${enterprise.name == 'TEST'}">
-    <video id="video" controls autoplay loop width="640" height="360"></video>
+    <video id="video" controls autoplay width="640" height="360"></video>
     <button id="alertButton" class="alert-button">Вызвать охрану</button>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        const video = document.getElementById('video');
-        const videoSrc = 'http://localhost:8081/hls/demo.m3u8';
-        const alertButton = document.getElementById('alertButton');
+    const video = document.getElementById('video');
+    const videoSrc = 'http://localhost:8081/hls/demo.m3u8';
+    const alertButton = document.getElementById('alertButton');
 
-        async function checkFaceStatus() {
-          console.log("Запрос на получение статуса лица для TEST...");
-          try {
+    async function checkFaceStatus() {
+        console.log("Запрос на получение статуса лица...");
+        try {
             const response = await fetch('/api/check_face_status?enterprise=TEST');
             if (!response.ok) {
-              throw new Error(`Ошибка сервера: ${response.status}`);
+                throw new Error(`Ошибка сервера: ${response.status}`);
             }
             const data = await response.json();
-            console.log("Статус лица от сервера для TEST:", data);
+            console.log("Статус лица от сервера:", data);
 
             if (!data) {
-              alertButton.classList.add('visible');
-              console.log("Кнопка вызова охраны отображена.");
+                alertButton.classList.add('visible');
+                console.log("Кнопка вызова охраны отображена.");
             } else {
-              alertButton.classList.remove('visible');
-              console.log("Кнопка вызова охраны скрыта.");
+                alertButton.classList.remove('visible');
+                console.log("Кнопка вызова охраны скрыта.");
             }
-          } catch (error) {
-            console.error("Ошибка при получении статуса лица для TEST:", error);
-          }
+        } catch (error) {
+            console.error("Ошибка при получении статуса лица:", error);
         }
+    }
 
-        if (Hls.isSupported()) {
-          const hls = new Hls();
-          hls.loadSource(videoSrc);
-          hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            console.log("Manifest loaded. Waiting for user interaction to play.");
-          });
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            console.error("HLS.js Error:", data);
-          });
-        } else {
-          video.src = videoSrc;
-        }
+    if (Hls.isSupported()) {
+        const hls = new Hls({ debug: true });
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
 
-        video.addEventListener('play', () => {
-          alertButton.classList.add('visible');
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            console.log("Manifest loaded successfully. Video ready to play.");
         });
 
-        // Проверяем статус каждые 10 секунд
-        setInterval(checkFaceStatus, 10000);
-        checkFaceStatus(); // Первичная проверка
-      });
+        hls.on(Hls.Events.ERROR, (event, data) => {
+            console.error(`HLS.js Error (${data.type}):`, data.details);
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = videoSrc; // Fallback for browsers with native HLS support
+    } else {
+        console.error("HLS.js is not supported, and the browser does not support native HLS.");
+    }
+
+    // Check face status every 10 seconds
+    setInterval(checkFaceStatus, 10000);
+    checkFaceStatus();
+});
+
     </script>
   </div>
 
@@ -109,15 +110,5 @@
   <button type="submit">Добавить камеру</button>
 </form>
 
-<button onclick="addCamera()">Добавить камеру</button>
-<script>
-  function addCamera() {
-    const cameraList = document.getElementById('camera-list');
-    const cameraItem = document.createElement('div');
-    cameraItem.classList.add('camera-container');
-    cameraItem.textContent = 'Идет трансляция';
-    cameraList.appendChild(cameraItem);
-  }
-</script>
 </body>
 </html>

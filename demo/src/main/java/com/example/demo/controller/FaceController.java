@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Employee;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -8,10 +9,17 @@ import org.opencv.videoio.VideoCapture;
 import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import com.example.demo.service.EmployeeService;
+
 @RestController
 @RequestMapping("/api")
 public class FaceController {
+    private EmployeeService employeeService;
     private boolean faceDetected = false; // To store face detection status
     static {
         try {
@@ -62,6 +70,11 @@ public class FaceController {
             if (faces.toArray().length > 0) {
                 faceFound = true;
                 System.out.println("Лица обнаружены.");
+                List<Employee> employees = employeeService.getAllEmployees();
+                Random random = new Random();
+
+                Employee employee = employees.get(random.nextInt(employees.size()));
+                employee.setDateTime(LocalDateTime.now());
                 saveFaces(frame, faces);
             } else {
                 System.out.println("Лица не обнаружены.");

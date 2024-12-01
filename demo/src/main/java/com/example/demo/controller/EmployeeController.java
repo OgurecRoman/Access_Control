@@ -18,7 +18,7 @@ public class EmployeeController {
             @RequestParam("name") String name,
             @RequestParam("age") int age,
             @RequestParam("idOfEnterprise") Long idOfEnterprise,
-            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "file", required = false) String file,
             @RequestParam("fromCamera") boolean fromCamera) {
         Employee employee = new Employee();
         employee.setName(name);
@@ -29,6 +29,7 @@ public class EmployeeController {
                 ? ResponseEntity.ok("Employee added successfully.")
                 : ResponseEntity.badRequest().body("Failed to add employee.");
     }
+
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> removeEmployee(@PathVariable Long id) {
         boolean success = employeeService.removeEmployee(id);

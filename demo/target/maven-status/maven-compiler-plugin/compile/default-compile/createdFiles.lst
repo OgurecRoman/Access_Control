@@ -1,7 +1,16 @@
 com\example\demo\DemoApplication.class
 com\example\demo\model\Employee.class
 com\example\demo\controller\MainController.class
-com\example\demo\controller\EnterpriseController.class
 com\example\demo\repository\EmployeeRepository.class
+com\example\demo\model\Camera.class
+com\example\demo\repository\EnterpriseRepository.class
+com\example\demo\service\EnterpriseService.class
+com\example\demo\controller\EnterpriseController.class
+com\example\demo\service\CameraService.class
+com\example\demo\controller\EmployeeController.class
+com\example\demo\model\Enterprise.class
+com\example\demo\controller\MainController$Depart.class
 com\example\demo\controller\FaceController.class
 com\example\demo\service\EmployeeService.class
+com\example\demo\controller\CameraController.class
+com\example\demo\repository\CameraRepository.class

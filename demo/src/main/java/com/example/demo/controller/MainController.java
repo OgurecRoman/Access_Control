@@ -3,19 +3,21 @@ import com.example.demo.model.Employee;
 import com.example.demo.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Controller
 public class MainController {
     private List<Depart> depart = new ArrayList<>();
@@ -48,20 +50,32 @@ public class MainController {
     @GetMapping("/addEmployees")
     public String addEmployeeForm(Model model) {
         model.addAttribute("employees", new Employee());
+        return "addEmployees"; // Указывает на HTML-шаблон
+    }
+
+    @PostMapping("/addEmployee")
+    public String addEmployee(
+    @ModelAttribute Employee employee,
+    @RequestParam("photo") String file,
+    @RequestParam(value = "fromCamera", defaultValue = "false") boolean fromCamera, Model model) {
+
+
+    // Set the current timestamp for `dateTime`
+    employee.setDateTime(LocalDateTime.now());
+
+    // Save the employee to the database
+    boolean addedToDb = employeeService.addEmployee(employee, file, fromCamera);
+    if (!addedToDb) {
+        model.addAttribute("error", "Failed to add employee to the database.");
         return "addEmployees";
     }
-    @PostMapping("/addEmployee")
-    public String addEmployee(@ModelAttribute Employee employee, @RequestParam("photo") MultipartFile file) throws IOException {
-        // Сохранение файла в директорию "uploads"
-        if (!file.isEmpty()) {
-            String fileName = file.getOriginalFilename();
-            Path path = Paths.get("uploads/" + fileName);
-            Files.createDirectories(path.getParent());  // Создание папки, если она не существует
-            file.transferTo(path);  // Сохранение файла на диск
-            employee.setPhoto(fileName);  // Сохранение имени файла в объекте Employee
-        }
-        return "redirect:/employees";
-    }
+
+    // Success message
+    model.addAttribute("success", "Employee successfully added.");
+    return "redirect:/employees";
+}
+
+
     @GetMapping("/addEnterprise")
     public String addDepartmentForm(Model model) {
         model.addAttribute("Enterprise", new Depart("", ""));
@@ -71,6 +85,14 @@ public class MainController {
     public String addDepartment(@ModelAttribute Depart department) throws IOException {
         depart.add(department);
         return "redirect:/enterprise";
+    }
+    @GetMapping("/remove/{id}")
+    public String removeEmployee(@PathVariable Long id) {
+        boolean success = employeeService.removeEmployee(id);
+        if (!success) {
+            // Log or handle error (optional)
+        }
+        return "redirect:/employees";
     }
     @GetMapping("/")
     public String index() {
