@@ -1,7 +1,7 @@
-package mock_server.service;
+package main.java.com.example.demo.service;
 
-import mock_server.employee_structure.Employee;
-import mock_server.employee_structure.EmployeeRepository;
+import main.java.com.example.demo.employee_structure.Employee;
+import main.java.com.example.demo.employee_structure.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 // Интерфейс для работы с загружаемыми файлами.

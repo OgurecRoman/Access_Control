@@ -1,12 +1,12 @@
-package mock_server.controller;
+package main.java.com.example.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import main.java.com.example.demo.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // использует ResponseEntity для формирования ответов с соответствующими статусами и сообщениями
 import org.springframework.web.bind.annotation.*;
 
-import mock_server.service.EmployeeService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package mock_server.employee_structure;
+package main.java.com.example.demo.employee_structure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 /* Интерфейс, предоставляемый Spring Data JPA,
