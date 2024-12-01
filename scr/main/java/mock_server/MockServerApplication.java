@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 и указывает, что это приложение Spring Boot. */
 
 @SpringBootApplication
-public class Mock_Server_Application {
+public class MockServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(Mock_Server_Application.class, args);
 	}
