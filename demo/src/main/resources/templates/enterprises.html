@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Предприятия</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Предприятия</h1>
+<ul>
+  <!-- Список всех предприятий -->
+  <li th:each="enterprise : ${enterprises}">
+    <a th:href="@{/enterprises/{name}(name=${enterprise})}" th:text="${enterprise}"></a>
+  </li>
+</ul>
+<form method="post" th:action="@{/enterprises/add}">
+  <input type="text" name="name" placeholder="Название предприятия" required>
+  <button type="submit">Добавить предприятие</button>
+</form>
+</body>
+</html>

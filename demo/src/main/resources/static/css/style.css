@@ -14,3 +14,9 @@
 .alert-button.visible {
     display: block; /* Кнопка становится видимой */
 }
+#camera-list div {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
