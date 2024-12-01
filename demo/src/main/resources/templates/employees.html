@@ -9,6 +9,7 @@
     <h1>Сотрудники</h1>
     <nav>
         <a th:href="@{/}">В главное меню</a>
+        <a th:href="@{/addEmployees}">Добавить нового сотрудника</a>
     </nav>
     <div class="employee-cards">
         <div th:each="employee : ${employees}" class="employee-card">
