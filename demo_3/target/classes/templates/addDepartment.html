@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Добавление нового помещения </title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+  <h1>Добавить нового помещения</h1>
+  <nav>
+    <a th:href="@{/}">В главное меню</a>
+  </nav>
+  <form action="#" method="post" th:action="@{/addDepartment}" th:object="${Department}">
+    <label for="name">Имя:</label>
+    <input type="text" id="name" th:field="*{name}" required><br><br>
+
+    <label for="status">Статус:</label>
+    <input type="text" id="status" th:field="*{status}" accept="image/*" required><br><br>
+
+    <input type="submit" value="Сохранить">
+  </form>
+</div>
+</body>
+</html>
+
